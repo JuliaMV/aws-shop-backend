@@ -1,9 +1,10 @@
 import type { NotValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
-import { products } from 'src/mocks';
+import { getAllProducts } from 'src/service';
 
 const getProductsList: NotValidatedEventAPIGatewayProxyEvent = async () => {
+  const products = await getAllProducts();
   return formatJSONResponse({
     items: products
   });
