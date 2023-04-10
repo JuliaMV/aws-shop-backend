@@ -1,6 +1,6 @@
-import { ProductsList  } from "src/types";
+import { AvailableProductsList  } from "src/types";
 
-export const products: ProductsList = [
+export const products: AvailableProductsList = [
     {
       description: "Short Product Description1",
       id: "7567ec4b-b10c-48c5-9345-fc73c48a80aa",

@@ -12,4 +12,4 @@ export type Stock = {
 
 export type AvailableProduct = Product & Pick<Stock, 'count'>;
 
-export type ProductsList = AvailableProduct[];
+export type AvailableProductsList = AvailableProduct[];

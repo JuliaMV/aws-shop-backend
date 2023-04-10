@@ -1,4 +1,4 @@
-import { ScanCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { ScanCommand, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { Stock } from "src/types";
 import { ddbDocClient } from "src/clients";
 import { STOCKS_TABLE } from "src/env";
@@ -18,6 +18,18 @@ export const getById = async (productId: string): Promise<Stock | undefined> => 
             }
         }));
     return result.Item as Stock;
+}
+
+
+export const create = async (params): Promise<void> => {
+    await ddbDocClient
+        .send(new PutCommand({
+            TableName: STOCKS_TABLE,
+            Item: {
+                'product_id': params.product_id,
+                'count': params.count,
+            }
+        }));
 }
 
 
