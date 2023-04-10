@@ -1,7 +1,7 @@
 {
   "name": "product-service",
   "version": "1.0.0",
-  "description": "Serverless aws-nodejs-typescript template",
+  "description": "Part of AWS-course",
   "main": "serverless.ts",
   "scripts": {
     "deploy": "sls deploy",
