@@ -3,10 +3,8 @@ import { BatchExecuteStatementCommand, BatchStatementRequest } from "@aws-sdk/cl
 import { ddbDocClient } from "src/clients";
 import { AvailableProduct } from "src/types";
 import { products } from 'src/mocks';
+import { PRODUCTS_TABLE, STOCKS_TABLE } from "src/env";
 
-// TODO: move to env-variables
-const PRODUCTS_TABLE = 'ProductsDB';
-const STOCKS_TABLE = 'StocksDB';
 
 const generateProductStatement = ({ id, title, description, price }: AvailableProduct): BatchStatementRequest => ({
     Statement:
