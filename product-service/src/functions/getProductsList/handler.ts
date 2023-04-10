@@ -5,9 +5,7 @@ import { getAllProducts } from 'src/service';
 
 const getProductsList: NotValidatedEventAPIGatewayProxyEvent = async () => {
   const products = await getAllProducts();
-  return formatJSONResponse({
-    items: products
-  });
+  return formatJSONResponse(products);
 };
 
 export const main = middyfy(getProductsList);

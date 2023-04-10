@@ -5,9 +5,9 @@ type ValidatedAPIGatewayProxyEvent<S> = Omit<APIGatewayProxyEvent, 'body'> & { b
 export type ValidatedEventAPIGatewayProxyEvent<S> = Handler<ValidatedAPIGatewayProxyEvent<S>, APIGatewayProxyResult>
 export type NotValidatedEventAPIGatewayProxyEvent = Handler<APIGatewayProxyEvent, APIGatewayProxyResult>
 
-export const formatJSONResponse = (response: Record<string, unknown>) => {
+export const formatJSONResponse = (response: Record<string, unknown> | unknown[], statusCode: number = 200) => {
   return {
-    statusCode: 200,
+    statusCode,
     body: JSON.stringify(response),
     headers: {
       'Access-Control-Allow-Origin': '*'

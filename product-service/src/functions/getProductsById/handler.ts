@@ -10,13 +10,8 @@ const getProductsById: NotValidatedEventAPIGatewayProxyEvent = async (event) => 
             item: product
         });
     }
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'Product not found'}),
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        },
-      }
+
+    return formatJSONResponse({ message: 'Product not found'}, 404);
 };
 
 export const main = middyfy(getProductsById);
