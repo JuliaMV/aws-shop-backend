@@ -1,8 +1,8 @@
 export default {
     type: 'object',
     properties: {
-      title: { type: 'string' },
-      description: { type: 'string' },
+      title: { type: 'string', minLength: 3, maxLength: 255, },
+      description: { type: 'string', minLength: 3, maxLength: 1024, },
       price: { type: 'number' },
       count: { type: 'number' },
     },

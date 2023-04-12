@@ -7,7 +7,7 @@ export const  getAll = async (): Promise<Stock[]> => {
     const result = await ddbDocClient
         .send(new ScanCommand({ TableName: STOCKS_TABLE }));
     return result.Items as Stock[];
-}
+};
 
 export const getById = async (productId: string): Promise<Stock | undefined> => {
     const result = await ddbDocClient
@@ -18,7 +18,7 @@ export const getById = async (productId: string): Promise<Stock | undefined> => 
             }
         }));
     return result.Item as Stock;
-}
+};
 
 
 export const create = async (params): Promise<void> => {
@@ -30,6 +30,16 @@ export const create = async (params): Promise<void> => {
                 'count': params.count,
             }
         }));
-}
+};
 
-
+export const createTransationParams = (params) => {
+    return ({
+        Put: {
+            TableName: STOCKS_TABLE,
+            Item: {
+                'product_id': params.product_id,
+                'count': params.count,
+            }
+        }
+    })
+};

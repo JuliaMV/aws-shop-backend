@@ -33,3 +33,16 @@ export const create = async (params): Promise<void> => {
         }));
 }
 
+export const createTransationParams = (params) => {
+    return ({
+        Put: {
+            TableName: PRODUCTS_TABLE,
+            Item: {
+                'id': params.id,
+                'title': params.title,
+                'description': params.description,
+                'price': params.price,
+            }
+        }
+    })
+};
