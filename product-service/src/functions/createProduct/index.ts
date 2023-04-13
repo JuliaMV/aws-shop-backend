@@ -1,4 +1,4 @@
-import { handlerPath } from '@libs/handler-resolver';
+import { handlerPath } from "@libs/handler-resolver";
 // import schema from './schema';
 
 export default {
@@ -6,8 +6,8 @@ export default {
   events: [
     {
       http: {
-        method: 'post',
-        path: 'products',
+        method: "post",
+        path: "products",
         // To turn off API-Gateway validation
         // request: {
         //     schemas: {

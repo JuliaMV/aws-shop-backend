@@ -1,6 +1,5 @@
 // TODO: move to env-variables
-export const REGION = 'us-east-1';
+export const REGION = "us-east-1";
 
-export const PRODUCTS_TABLE = 'ProductsDB';
-export const STOCKS_TABLE = 'StocksDB';
-
+export const PRODUCTS_TABLE = "ProductsDB";
+export const STOCKS_TABLE = "StocksDB";

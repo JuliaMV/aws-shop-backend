@@ -1,5 +1,7 @@
-import { MiddlewareObj } from "@middy/core";
+import { type MiddlewareObj } from "@middy/core";
 
 export const logger: MiddlewareObj = {
-    before: ({ event}) => console.log(`Lambda was invoked with event: ${JSON.stringify(event)}`),
-}
+  before: ({ event }) => {
+    console.log(`Lambda was invoked with event: ${JSON.stringify(event)}`);
+  },
+};

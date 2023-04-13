@@ -1,1 +1,1 @@
-export * from './ddbDocClient';
+export * from "./ddbDocClient";
