@@ -1,17 +1,17 @@
-import type { NotValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
-import { formatJSONResponse } from '@libs/api-gateway';
-import { middyfy } from '@libs/lambda';
-import { getProductById } from 'src/service';
+import type { NotValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
+import { formatJSONResponse } from "@libs/api-gateway";
+import { middyfy } from "@libs/lambda";
+import { getAvailableProductById } from "src/service";
 
-const getProductsById: NotValidatedEventAPIGatewayProxyEvent = async (event) => {
-    const product = await getProductById(event.pathParameters.id);
-    if (product) {
-        return formatJSONResponse({
-            item: product
-        });
-    }
+const getProductsById: NotValidatedEventAPIGatewayProxyEvent = async (
+  event
+) => {
+  const product = await getAvailableProductById(event.pathParameters.id);
+  if (product !== null) {
+    return formatJSONResponse(product);
+  }
 
-    return formatJSONResponse({ message: 'Product not found'}, 404);
+  return formatJSONResponse({ message: "Product not found" }, 404);
 };
 
 export const main = middyfy(getProductsById);

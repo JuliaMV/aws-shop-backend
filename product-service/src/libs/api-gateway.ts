@@ -1,16 +1,36 @@
-import type { APIGatewayProxyEvent, APIGatewayProxyResult, Handler } from "aws-lambda"
-import type { FromSchema } from "json-schema-to-ts";
+import type {
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult,
+  Handler,
+} from "aws-lambda";
+import type { FromSchema, JSONSchema } from "json-schema-to-ts";
 
-type ValidatedAPIGatewayProxyEvent<S> = Omit<APIGatewayProxyEvent, 'body'> & { body: FromSchema<S> }
-export type ValidatedEventAPIGatewayProxyEvent<S> = Handler<ValidatedAPIGatewayProxyEvent<S>, APIGatewayProxyResult>
-export type NotValidatedEventAPIGatewayProxyEvent = Handler<APIGatewayProxyEvent, APIGatewayProxyResult>
+type ValidatedAPIGatewayProxyEvent<S extends JSONSchema> = Omit<
+  APIGatewayProxyEvent,
+  "body"
+> & {
+  body: FromSchema<S>;
+};
+export type ValidatedEventAPIGatewayProxyEvent<S extends JSONSchema> = Handler<
+  ValidatedAPIGatewayProxyEvent<S>,
+  APIGatewayProxyResult
+>;
+export type NotValidatedEventAPIGatewayProxyEvent = Handler<
+  APIGatewayProxyEvent,
+  APIGatewayProxyResult
+>;
 
-export const formatJSONResponse = (response: Record<string, unknown> | unknown[], statusCode: number = 200) => {
+export const formatJSONResponse = <T>(
+  response: T,
+  statusCode: number = 200
+): APIGatewayProxyResult => {
   return {
     statusCode,
     body: JSON.stringify(response),
     headers: {
-      'Access-Control-Allow-Origin': '*'
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "*",
+      "Access-Control-Allow-Headers": "*",
     },
-  }
-}
+  };
+};
