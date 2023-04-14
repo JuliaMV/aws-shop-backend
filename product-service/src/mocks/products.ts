@@ -1,4 +1,4 @@
-import { AvailableProductsList } from "src/types";
+import { type AvailableProductsList } from "src/types";
 
 export const products: AvailableProductsList = [
   {
