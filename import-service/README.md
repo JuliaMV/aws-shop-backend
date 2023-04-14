@@ -31,3 +31,4 @@ All endpoints are intergeted with UI https://d2ybabzqbtwgmh.cloudfront.net/
 ## Functions:
 
 importProductsFile: import-service-dev-importProductsFile
+importFileParser: import-service-dev-importFileParser

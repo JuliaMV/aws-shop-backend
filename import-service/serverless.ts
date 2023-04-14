@@ -1,6 +1,6 @@
 import type { AWS } from "@serverless/typescript";
 
-import { importProductsFile } from "src/functions";
+import { importProductsFile, importFileParser } from "src/functions";
 import { S3_BUCKET } from "src/env";
 
 const serverlessConfiguration: AWS = {
@@ -27,7 +27,7 @@ const serverlessConfiguration: AWS = {
       },
     ],
   },
-  functions: { importProductsFile },
+  functions: { importProductsFile, importFileParser },
   package: { individually: true },
   custom: {
     esbuild: {
