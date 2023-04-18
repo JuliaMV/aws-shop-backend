@@ -1,5 +1,5 @@
 import { handlerPath } from "@libs/handler-resolver";
-import { S3_BUCKET } from "src/env";
+import { S3_BUCKET, UPLOADED } from "src/env";
 
 export default {
   handler: `${handlerPath(__dirname)}/handler.main`,
@@ -11,7 +11,7 @@ export default {
         existing: true,
         rules: [
           {
-            prefix: "uploaded/",
+            prefix: `${UPLOADED}/`,
           },
         ],
       },

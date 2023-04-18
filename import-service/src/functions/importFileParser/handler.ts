@@ -7,7 +7,7 @@ import {
 import { S3Event } from "aws-lambda";
 import { parse } from "csv-parse";
 
-import { REGION } from "src/env";
+import { PARSED, REGION, UPLOADED } from "src/env";
 
 const importFileParser = async (event: S3Event) => {
   const client = new S3Client({ region: REGION });
@@ -51,7 +51,7 @@ const importFileParser = async (event: S3Event) => {
   const commandCopy = new CopyObjectCommand({
     CopySource: `${bucketName}/${key}`,
     Bucket: bucketName,
-    Key: key.replace("uploaded", "parsed"),
+    Key: key.replace(UPLOADED, PARSED),
   });
 
   await client.send(commandCopy);
