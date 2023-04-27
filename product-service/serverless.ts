@@ -7,6 +7,7 @@ import {
   catalogBatchProcess,
 } from "src/functions";
 import {
+  ADDITIONAL_EMAIL,
   CATALOG_ITEMS_QUEUE,
   CREATE_PRODUCT_TOPIC,
   PRIMARY_EMAIL,
@@ -109,6 +110,20 @@ const serverlessConfiguration: AWS = {
           Protocol: "email",
           TopicArn: {
             Ref: "SNSTopic",
+          },
+        },
+      },
+      SNSSubscriptionAdditional: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Endpoint: ADDITIONAL_EMAIL,
+          Protocol: "email",
+          TopicArn: {
+            Ref: "SNSTopic",
+          },
+          FilterPolicyScope: "MessageAttributes",
+          FilterPolicy: {
+            count: [{ numeric: ["<", 3] }],
           },
         },
       },

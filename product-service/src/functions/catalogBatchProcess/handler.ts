@@ -18,12 +18,18 @@ const catalogBatchProcess = async (event: SQSEvent): Promise<void> => {
 
     await createAvailableProduct(payload);
 
-    const notificationParams: PublishCommandInput = {
+    const emailParams: PublishCommandInput = {
       Subject: "New product is saved",
       Message: `Product title: ${payload.title}, description: ${payload.description}, price: ${payload.price}, count: ${payload.count}`,
       TopicArn: process.env.SNS_TOPIC_ARN,
+      MessageAttributes: {
+        count: {
+          DataType: "Number",
+          StringValue: count,
+        },
+      },
     };
-    await snsClient.send(new PublishCommand(notificationParams));
+    await snsClient.send(new PublishCommand(emailParams));
   }
 };
 
