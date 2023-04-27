@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.309.0",
+    "@aws-sdk/client-sns": "^3.321.1",
     "@aws-sdk/lib-dynamodb": "^3.309.0",
     "@middy/core": "^3.4.0",
     "@middy/http-error-handler": "^4.3.0",

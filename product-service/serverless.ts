@@ -8,6 +8,8 @@ import {
 } from "src/functions";
 import {
   CATALOG_ITEMS_QUEUE,
+  CREATE_PRODUCT_TOPIC,
+  PRIMARY_EMAIL,
   PRODUCTS_TABLE,
   REGION,
   STOCKS_TABLE,
@@ -33,6 +35,9 @@ const serverlessConfiguration: AWS = {
       STOCKS_DB: STOCKS_TABLE,
       SQS_QUEUE_URL: {
         Ref: "SQSQueue",
+      },
+      SNS_TOPIC_ARN: {
+        Ref: "SNSTopic",
       },
     },
     iamRoleStatements: [
@@ -67,6 +72,13 @@ const serverlessConfiguration: AWS = {
         Action: "sqs:*",
         Resource: { "Fn::GetAtt": ["SQSQueue", "Arn"] },
       },
+      {
+        Effect: "Allow",
+        Action: "sns:*",
+        Resource: {
+          Ref: "SNSTopic",
+        },
+      },
     ],
   },
   functions: {
@@ -82,6 +94,22 @@ const serverlessConfiguration: AWS = {
         Type: "AWS::SQS::Queue",
         Properties: {
           QueueName: CATALOG_ITEMS_QUEUE,
+        },
+      },
+      SNSTopic: {
+        Type: "AWS::SNS::Topic",
+        Properties: {
+          TopicName: CREATE_PRODUCT_TOPIC,
+        },
+      },
+      SNSSubscription: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Endpoint: PRIMARY_EMAIL,
+          Protocol: "email",
+          TopicArn: {
+            Ref: "SNSTopic",
+          },
         },
       },
     },
