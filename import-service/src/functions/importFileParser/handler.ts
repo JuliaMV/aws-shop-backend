@@ -2,15 +2,16 @@ import {
   CopyObjectCommand,
   DeleteObjectCommand,
   GetObjectCommand,
-  S3Client,
 } from "@aws-sdk/client-s3";
+import { SendMessageCommand } from "@aws-sdk/client-sqs";
 import { S3Event } from "aws-lambda";
-import { parse } from "csv-parse";
+import csv from "csv-parser";
 
-import { PARSED, REGION, UPLOADED } from "src/env";
+import { PARSED, UPLOADED } from "src/env";
+import { s3Client, sqsClient } from "src/clients";
 
 const importFileParser = async (event: S3Event) => {
-  const client = new S3Client({ region: REGION });
+  const client = s3Client;
 
   const { Records } = event;
   const {
@@ -23,30 +24,18 @@ const importFileParser = async (event: S3Event) => {
     Key: key,
   });
 
-  const response = await client.send(commandGet);
+  const queueUrl = `https://sqs.us-east-1.amazonaws.com/${process.env.ACCOUNT_ID}/${process.env.SQS_NAME}`;
 
-  const stream = await response.Body.transformToByteArray();
-  const records = [];
-  const parser = parse();
+  const responseStream = (await client.send(commandGet)).Body;
 
-  parser.on("readable", () => {
-    let record;
-    while ((record = parser.read()) !== null) {
-      console.log("row", record);
-      records.push(record);
-    }
+  (responseStream as any).pipe(csv()).on("data", async (data) => {
+    const params = {
+      DelaySeconds: 10,
+      MessageBody: JSON.stringify(data).replace("\ufeff", ""),
+      QueueUrl: queueUrl,
+    };
+    await sqsClient.send(new SendMessageCommand(params));
   });
-
-  parser.on("error", (err) => {
-    console.log("Parsing error", err);
-  });
-
-  parser.on("end", () => {
-    console.log(`Parsed ${records.length} records`);
-  });
-
-  parser.write(stream);
-  parser.end();
 
   const commandCopy = new CopyObjectCommand({
     CopySource: `${bucketName}/${key}`,

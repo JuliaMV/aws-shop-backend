@@ -1,7 +1,20 @@
 import type { AWS } from "@serverless/typescript";
 
-import { getProductsById, getProductsList, createProduct } from "src/functions";
-import { PRODUCTS_TABLE, REGION, STOCKS_TABLE } from "src/env";
+import {
+  getProductsById,
+  getProductsList,
+  createProduct,
+  catalogBatchProcess,
+} from "src/functions";
+import {
+  ADDITIONAL_EMAIL,
+  CATALOG_ITEMS_QUEUE,
+  CREATE_PRODUCT_TOPIC,
+  PRIMARY_EMAIL,
+  PRODUCTS_TABLE,
+  REGION,
+  STOCKS_TABLE,
+} from "src/env";
 
 const serverlessConfiguration: AWS = {
   service: "product-service",
@@ -21,6 +34,12 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000",
       PRODUCTS_DB: PRODUCTS_TABLE,
       STOCKS_DB: STOCKS_TABLE,
+      SQS_QUEUE_URL: {
+        Ref: "SQSQueue",
+      },
+      SNS_TOPIC_ARN: {
+        Ref: "SNSTopic",
+      },
     },
     iamRoleStatements: [
       {
@@ -49,10 +68,67 @@ const serverlessConfiguration: AWS = {
         Resource:
           "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.STOCKS_DB}",
       },
+      {
+        Effect: "Allow",
+        Action: "sqs:*",
+        Resource: { "Fn::GetAtt": ["SQSQueue", "Arn"] },
+      },
+      {
+        Effect: "Allow",
+        Action: "sns:*",
+        Resource: {
+          Ref: "SNSTopic",
+        },
+      },
     ],
   },
-  functions: { getProductsList, getProductsById, createProduct },
+  functions: {
+    getProductsList,
+    getProductsById,
+    createProduct,
+    catalogBatchProcess,
+  },
   package: { individually: true },
+  resources: {
+    Resources: {
+      SQSQueue: {
+        Type: "AWS::SQS::Queue",
+        Properties: {
+          QueueName: CATALOG_ITEMS_QUEUE,
+        },
+      },
+      SNSTopic: {
+        Type: "AWS::SNS::Topic",
+        Properties: {
+          TopicName: CREATE_PRODUCT_TOPIC,
+        },
+      },
+      SNSSubscription: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Endpoint: PRIMARY_EMAIL,
+          Protocol: "email",
+          TopicArn: {
+            Ref: "SNSTopic",
+          },
+        },
+      },
+      SNSSubscriptionAdditional: {
+        Type: "AWS::SNS::Subscription",
+        Properties: {
+          Endpoint: ADDITIONAL_EMAIL,
+          Protocol: "email",
+          TopicArn: {
+            Ref: "SNSTopic",
+          },
+          FilterPolicyScope: "MessageAttributes",
+          FilterPolicy: {
+            count: [{ numeric: ["<", 3] }],
+          },
+        },
+      },
+    },
+  },
   custom: {
     esbuild: {
       bundle: true,
