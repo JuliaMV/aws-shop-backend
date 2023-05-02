@@ -18,7 +18,12 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000",
     },
     httpApi: {
-      cors: true,
+      cors: {
+        allowedOrigins: ["*"],
+        allowedHeaders: ["*"],
+        allowedMethods: ["*"],
+        allowCredentials: true,
+      },
     },
   },
   functions: { basicAuthorizer },
